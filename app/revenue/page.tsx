@@ -1,5 +1,5 @@
 import { ChartCard } from "@/components/ChartCard";
-import { KpiCard } from "@/components/KpiCard";
+import { KpiGrid } from "@/components/KpiGrid";
 import { getRevenueData } from "@/lib/api";
 
 export default async function RevenuePage() {
@@ -7,11 +7,7 @@ export default async function RevenuePage() {
 
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 md:grid-cols-3">
-        {data.kpis.map((kpi) => (
-          <KpiCard key={kpi.label} kpi={kpi} />
-        ))}
-      </section>
+      <KpiGrid kpis={data.kpis} className="md:grid-cols-3 xl:grid-cols-3" />
 
       <section className="grid gap-6 xl:grid-cols-[2fr_1fr]">
         <ChartCard

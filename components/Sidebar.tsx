@@ -12,30 +12,37 @@ import {
   TrendingUp
 } from "lucide-react";
 
+import type { NavigationIcon, NavigationItem } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const navigation = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/rooms", label: "Rooms", icon: BedDouble },
-  { href: "/revenue", label: "Revenue", icon: TrendingUp },
-  { href: "/fnb", label: "F&B", icon: ChefHat },
-  { href: "/inventory", label: "Inventory", icon: PackageOpen },
-  { href: "/finance", label: "Finance", icon: ReceiptText },
-  { href: "/alerts", label: "Alerts", icon: AlertTriangle }
-];
+const iconMap: Record<NavigationIcon, typeof LayoutDashboard> = {
+  alerts: AlertTriangle,
+  dashboard: LayoutDashboard,
+  finance: ReceiptText,
+  fnb: ChefHat,
+  inventory: PackageOpen,
+  revenue: TrendingUp,
+  rooms: BedDouble
+};
 
-export function Sidebar() {
+type SidebarProps = {
+  navigation: NavigationItem[];
+  productLabel: string;
+  sectionLabel: string;
+};
+
+export function Sidebar({ navigation, productLabel, sectionLabel }: SidebarProps) {
   const pathname = usePathname();
 
   return (
     <aside className="hidden min-h-screen w-72 border-r bg-card px-4 py-6 lg:block">
       <div className="mb-8 px-3">
-        <p className="text-sm font-medium text-muted-foreground">HotelOS</p>
-        <h1 className="text-2xl font-bold tracking-tight">Management</h1>
+        <p className="text-sm font-medium text-muted-foreground">{productLabel}</p>
+        <h1 className="text-2xl font-bold tracking-tight">{sectionLabel}</h1>
       </div>
       <nav className="space-y-1">
         {navigation.map((item) => {
-          const Icon = item.icon;
+          const Icon = iconMap[item.icon];
           const active = pathname === item.href;
 
           return (

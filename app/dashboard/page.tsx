@@ -1,27 +1,19 @@
 import { AlertBadge } from "@/components/AlertBadge";
 import { ChartCard } from "@/components/ChartCard";
 import { DataTable } from "@/components/DataTable";
-import { KpiCard } from "@/components/KpiCard";
+import { KpiGrid } from "@/components/KpiGrid";
 import { Badge } from "@/components/ui/badge";
 import { getDashboardData } from "@/lib/api";
+import { formatCurrency } from "@/lib/formatters";
+import { roomStatusVariant } from "@/lib/status";
 import type { HotelAlert, Room } from "@/lib/types";
-
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0
-});
 
 export default async function DashboardPage() {
   const data = await getDashboardData();
 
   return (
     <div className="space-y-6">
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {data.kpis.map((kpi) => (
-          <KpiCard key={kpi.label} kpi={kpi} />
-        ))}
-      </section>
+      <KpiGrid kpis={data.kpis} />
 
       <section className="grid gap-6 xl:grid-cols-2">
         <ChartCard
@@ -52,13 +44,11 @@ export default async function DashboardPage() {
             {
               header: "Status",
               accessor: (room) => (
-                <Badge variant={room.status === "Occupied" ? "success" : "secondary"}>
-                  {room.status}
-                </Badge>
+                <Badge variant={roomStatusVariant[room.status]}>{room.status}</Badge>
               )
             },
             { header: "Guest", accessor: "guest" },
-            { header: "Rate", accessor: (room) => currency.format(room.rate), className: "text-right" }
+            { header: "Rate", accessor: (room) => formatCurrency(room.rate), className: "text-right" }
           ]}
         />
         <DataTable<HotelAlert>

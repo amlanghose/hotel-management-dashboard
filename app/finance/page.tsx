@@ -2,13 +2,9 @@ import { ChartCard } from "@/components/ChartCard";
 import { DataTable } from "@/components/DataTable";
 import { Badge } from "@/components/ui/badge";
 import { getFinanceData } from "@/lib/api";
+import { formatCurrency } from "@/lib/formatters";
+import { financeVarianceVariant } from "@/lib/status";
 import type { FinanceRecord } from "@/lib/types";
-
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0
-});
 
 export default async function FinancePage() {
   const data = await getFinanceData();
@@ -32,13 +28,13 @@ export default async function FinancePage() {
         columns={[
           { header: "Account", accessor: "account" },
           { header: "Owner", accessor: "owner" },
-          { header: "Budget", accessor: (record) => currency.format(record.budget), className: "text-right" },
-          { header: "Actual", accessor: (record) => currency.format(record.actual), className: "text-right" },
+          { header: "Budget", accessor: (record) => formatCurrency(record.budget), className: "text-right" },
+          { header: "Actual", accessor: (record) => formatCurrency(record.actual), className: "text-right" },
           {
             header: "Variance",
             accessor: (record) => (
-              <Badge variant={record.variance >= 0 ? "success" : "destructive"}>
-                {currency.format(record.variance)}
+              <Badge variant={financeVarianceVariant(record.variance)}>
+                {formatCurrency(record.variance)}
               </Badge>
             ),
             className: "text-right"

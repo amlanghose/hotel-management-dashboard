@@ -1,13 +1,8 @@
 import { ChartCard } from "@/components/ChartCard";
 import { DataTable } from "@/components/DataTable";
 import { getFnbData } from "@/lib/api";
+import { formatCurrency } from "@/lib/formatters";
 import type { FnbOutlet } from "@/lib/types";
-
-const currency = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-  maximumFractionDigits: 0
-});
 
 export default async function FnbPage() {
   const data = await getFnbData();
@@ -31,8 +26,8 @@ export default async function FnbPage() {
         columns={[
           { header: "Outlet", accessor: "outlet" },
           { header: "Covers", accessor: "covers", className: "text-right" },
-          { header: "Revenue", accessor: (outlet) => currency.format(outlet.revenue), className: "text-right" },
-          { header: "Avg check", accessor: (outlet) => currency.format(outlet.avgCheck), className: "text-right" },
+          { header: "Revenue", accessor: (outlet) => formatCurrency(outlet.revenue), className: "text-right" },
+          { header: "Avg check", accessor: (outlet) => formatCurrency(outlet.avgCheck), className: "text-right" },
           { header: "Satisfaction", accessor: "satisfaction", className: "text-right" }
         ]}
       />
